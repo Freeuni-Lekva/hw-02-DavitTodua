@@ -36,7 +36,7 @@ public class DefaultBrain implements Brain {
         while (true) {
             final int yBound = limitHeight - current.getHeight()+1;
             final int xBound = board.getWidth() - current.getWidth()+1;
-            
+            System.out.println(yBound);
             // For current rotation, try all the possible columns
             for (int x = 0; x<xBound; x++) {
                 int y = board.dropHeight(current, x);

@@ -1,6 +1,8 @@
-import junit.framework.TestCase;
 
-import java.util.*;
+import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
 
 /*
   Unit test for Piece class -- starter shell.
@@ -39,6 +41,15 @@ public class PieceTest extends TestCase {
 		// Effectively we're testing size and rotation code here
 		assertEquals(2, pyr2.getWidth());
 		assertEquals(3, pyr2.getHeight());
+
+		assertEquals(3, pyr3.getWidth());
+		assertEquals(2, pyr3.getHeight());
+
+		assertEquals(2, pyr4.getWidth());
+		assertEquals(3, pyr3.getHeight());
+
+		assertEquals(3, pyr3.getWidth());
+		assertEquals(2, pyr3.getHeight());
 		
 		// Now try with some other piece, made a different way
 		Piece l = new Piece(Piece.STICK_STR);

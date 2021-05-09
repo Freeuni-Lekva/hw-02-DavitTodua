@@ -26,6 +26,7 @@ public class Piece {
 	private int width;
 	private int height;
 	private Piece next; // "next" rotation
+	public int rotateCount;
 
 	static private Piece[] pieces;	// singleton static array of first rotations
 
@@ -34,7 +35,41 @@ public class Piece {
 	 Makes its own copy of the array and the TPoints inside it.
 	*/
 	public Piece(TPoint[] points) {
-		// YOUR CODE HERE
+		body = points.clone();
+
+		rotateCount = 0;
+
+		Iterator It = Arrays.stream(points).iterator();
+		height = 0;
+		width = 0;
+		//get Height, Width And Skirt
+
+		while(It.hasNext()) {
+			TPoint curr = (TPoint) It.next();
+			if(height < curr.y) {
+				height = curr.y;
+			}
+			if(width < curr.x) {
+				width = curr.x;
+			}
+		}
+		width++;
+		height++;
+
+		//get skirt
+		skirt = new int[width];
+		for(int i = 0; i< skirt.length; i++) {
+			skirt[i] = -1;
+		}
+		for(TPoint curr: body) {
+			if (skirt[curr.x] == -1) {
+				skirt[curr.x] = curr.y;
+			} else {
+				if (skirt[curr.x] > curr.y) {
+					skirt[curr.x] = curr.y;
+				}
+			}
+		}
 	}
 	
 
@@ -87,8 +122,50 @@ public class Piece {
 	 rotated from the receiver.
 	 */
 	public Piece computeNextRotation() {
-		// YOUR CODE HERE
-		return null; // YOUR CODE HERE
+		if(rotateCount < 4) {
+			rotateCount++;
+		} else {
+			rotateCount = 0;
+		}
+		TPoint[] myNext = new TPoint[body.length];
+		//System.arraycopy(body,0,myNext,0,body.length);
+
+		Piece nextOne = new Piece(getNextRotation(myNext));
+		nextOne.rotateCount = rotateCount;
+		//System.out.println(body.equals(myNext));
+		//System.out.println(body == myNext);
+		rotateCount--;
+
+		return nextOne;
+	}
+	private TPoint[] getNextRotation(TPoint[] myNext) {
+			for(int i = 0; i < myNext.length; i++) {
+				myNext[i] = new TPoint(0,0);
+				TPoint curr = body[i];
+				int x = curr.y;
+				int y = -curr.x;
+				myNext[i].x = x;
+				myNext[i].y = y;
+			}
+		return move(myNext);
+	}
+
+	private TPoint[] move(TPoint[] myNext) {
+		int maxY = 0;
+		int maxX = 0;
+		for(TPoint curr: myNext) {
+			if(curr.x < maxX) {
+				maxX = curr.x;
+			}
+			if(curr.y < maxY) {
+				maxY = curr.y;
+			}
+		}
+		for(TPoint curr: myNext) {
+			curr.x = curr.x - maxX;
+			curr.y = curr.y - maxY;
+		}
+		return myNext;
 	}
 
 	/**
@@ -98,6 +175,7 @@ public class Piece {
 	 just returns null.
 	*/	
 	public Piece fastRotation() {
+		if(next == null) System.out.println("nulia");
 		return next;
 	}
 	
@@ -121,6 +199,14 @@ public class Piece {
 		Piece other = (Piece)obj;
 		
 		// YOUR CODE HERE
+		TPoint[] Body2 = ((Piece) obj).getBody();
+		if(body.length != Body2.length) return false;
+		for(int i = 0; i < Body2.length; i++ ) {
+			if(!body[i].equals(Body2[i])) {
+				return false;
+			}
+
+		}
 		return true;
 	}
 
@@ -187,8 +273,22 @@ public class Piece {
 	 to the first piece.
 	*/
 	private static Piece makeFastRotations(Piece root) {
-		// YOUR CODE HERE
-		return null; // YOUR CODE HERE
+		Piece curr = root.computeNextRotation();
+		Piece next2 = curr;
+		root.next = curr;
+
+		while(!root.equals(curr)) {
+			System.out.println("itvlis");
+			curr.next = curr.computeNextRotation();
+			if(curr.next.equals(root)) {
+				curr.next = root;
+				break;
+			}
+			curr = curr.next;
+		}
+		//curr = root;
+		//curr.next = next2;
+		return root;
 	}
 	
 	

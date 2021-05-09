@@ -43,7 +43,7 @@ public class JTetris extends JComponent {
 	// Extra blocks at the top for pieces to start.
 	// If a piece is sticking up into this area
 	// when it has landed -- game over!
-	public static final int TOP_SPACE = 4;
+	public static final int TOP_SPACE = 3;
 	
 	// When this is true, plays a fixed sequence of 100 pieces
 	protected boolean testMode = false;
@@ -233,7 +233,7 @@ public class JTetris extends JComponent {
 	 Sets the enabling of the start/stop buttons
 	 based on the gameOn state.
 	*/
-	private void enableButtons() {
+	void enableButtons() {
 		startButton.setEnabled(!gameOn);
 		stopButton.setEnabled(gameOn);
 	}
@@ -262,6 +262,11 @@ public class JTetris extends JComponent {
 	 Returns the same error code as Board.place().
 	*/
 	public int setCurrent(Piece piece, int x, int y) {
+		if( y == -1 ) {
+			System.out.println("aeeee");
+		}
+		System.out.println(x + " X");
+		System.out.println(y + " Y");
 		int result = board.place(piece, x, y);
 		
 		if (result <= Board.PLACE_ROW_FILLED) { // SUCESS
@@ -335,7 +340,7 @@ public class JTetris extends JComponent {
 	/**
 	 Updates the count/score labels with the latest values.
 	 */
-	private void updateCounters() {
+	void updateCounters() {
 		countLabel.setText("Pieces " + count);
 		scoreLabel.setText("Score " + score);
 	}
@@ -426,6 +431,7 @@ public class JTetris extends JComponent {
 		
 		// try out the new position (rolls back if it doesn't work)
 		int result = setCurrent(newPiece, newX, newY);
+		System.out.println(newX + "   abaa " + newY);
 		
 		// if row clearing is going to happen, draw the
 		// whole board so the green row shows up
